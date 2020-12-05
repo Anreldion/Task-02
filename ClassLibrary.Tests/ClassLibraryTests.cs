@@ -9,7 +9,7 @@ namespace ClassLibrary.Tests
     public class ClassLibraryTests
     {
         //****************************************************************
-        //Products class tests
+        //PRODUCTS CLASS TESTS
         //****************************************************************
 
         /// <summary>
@@ -47,9 +47,11 @@ namespace ClassLibrary.Tests
             Assert.AreEqual(expected, total_cost, delta);
 
         }
-
+        //*****************************************************************
+        // Сложение 
+        //*****************************************************************
         /// <summary>
-        /// Сложить исходный продукт с эквивалентным по виду и наименованию. Исходный объект изменяется.
+        /// Вариант 1. Сложить исходный продукт с эквивалентным по виду и наименованию. Исходный объект изменяется.
         /// </summary>
         [TestMethod]
         public void Products_SummEqualProduct_Test()
@@ -73,7 +75,7 @@ namespace ClassLibrary.Tests
         }
 
         /// <summary>
-        /// Сложение двух одинаковых видов товаров. Операция возвращает новый объект.
+        /// Вариант 2. Сложение двух одинаковых видов товаров. Операция возвращает новый объект.
         /// </summary> 
         [TestMethod]
         public void Products_SummEqualProducts_Test()
@@ -101,6 +103,40 @@ namespace ClassLibrary.Tests
             Assert.AreEqual(expecterd_murkup_coefficient, product_three.MurkupCoefficient, delta);
             Assert.AreEqual(expecterd_numberOfUnits, product_three.NumberOfUnits);
         }
+        /// <summary>
+        /// Вариант 3. Сложение двух одинаковывх видов товаров.
+        /// </summary>
+        [TestMethod]
+        public void Products_SummEqualProductsOperator_Test()
+        {
+            // arrange
+            Products product_one = new MilkProducts("Ряженка", 2.5, 1.3, 100);
+            Products product_two = new MilkProducts("Ряженка", 3.5, 1.5, 10);
+            Products product_three;
+
+            string expecterd_name = "Ряженка";
+            double expecterd_purchasePrice = 2.5909;
+            double expecterd_murkup_coefficient = 1.3181;
+            double expecterd_numberOfUnits = 110;
+            TypesOfGood expecterd_productType = TypesOfGood.MilkProducts;
+
+            double delta = .001;
+
+            // act 
+            product_three = product_one + product_two;
+
+            // assert 
+            Assert.AreEqual(expecterd_name, product_three.ProductName);
+            Assert.AreEqual(expecterd_productType, product_three.ProductType);
+            Assert.AreEqual(expecterd_purchasePrice, product_three.PurchasePrice, delta);
+            Assert.AreEqual(expecterd_murkup_coefficient, product_three.MurkupCoefficient, delta);
+            Assert.AreEqual(expecterd_numberOfUnits, product_three.NumberOfUnits);
+        }
+
+
+        //*****************************************************************************************
+        // Приведения типа товара
+        //*****************************************************************************************
 
         /// <summary>
         /// Вариант 1. Проверка возможности приведения типа товара к целочисленному (стоимость возвращается в копейках) и вещественному типу. 
@@ -150,6 +186,10 @@ namespace ClassLibrary.Tests
             Assert.AreEqual(expecterd_Penny, penny);
         }
 
+        //*****************************************************************************************
+        // Вычитание
+        //*****************************************************************************************
+
         /// <summary>
         /// Вычитание количества продукции. Исходный объект изменяется.
         /// </summary> 
@@ -159,13 +199,31 @@ namespace ClassLibrary.Tests
             // arrange
             Products product_one = new AlcoholicDrinks("Лидское", 2.3, 1.1, 50);
             int value = 5;
-            double expecterd_numberOfUnits = 45;
+            double expected_numberOfUnits = 45;
 
             // act 
             product_one.SubtractionUnits(value);
 
             // assert 
-            Assert.AreEqual(expecterd_numberOfUnits, product_one.NumberOfUnits);
+            Assert.AreEqual(expected_numberOfUnits, product_one.NumberOfUnits);
+        }
+
+        /// <summary>
+        /// Вычитание количества продукции через оператор.
+        /// </summary> 
+        [TestMethod]
+        public void Products_SubtractionUnitsOperator_Test()
+        {
+            // arrange
+            Products product_one = new AlcoholicDrinks("Лидское", 2.3, 1.1, 50);
+            int value = 5;
+            double expected_numberOfUnits = 45;
+
+            // act 
+            product_one = product_one - value;
+
+            // assert 
+            Assert.AreEqual(expected_numberOfUnits, product_one.NumberOfUnits);
         }
 
         //****************************************************************

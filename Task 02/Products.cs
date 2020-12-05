@@ -300,7 +300,7 @@ namespace ClassLibrary
             }
         }
         /// <summary>
-        /// Реализация вычитания целого числа
+        /// Реализация оператора вычитания целого числа из класса
         /// </summary>
         /// <param name="product">Продукция</param>
         /// <param name="subtract_value">Вычитаемое значение</param>
