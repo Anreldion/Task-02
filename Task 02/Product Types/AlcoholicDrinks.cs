@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using static ClassLibrary.Product_Types.TypesOfGoods;
+﻿using static ClassLibrary.Product_Types.TypesOfGoods;
 
 namespace ClassLibrary.Product_Types
 {

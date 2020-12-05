@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ClassLibrary.Product_Types
 {
@@ -35,9 +33,9 @@ namespace ClassLibrary.Product_Types
         public bool IsExcist(string type)
         {
             Array names = Enum.GetNames(typeof(TypesOfGood));
-            foreach(var item in names)
+            foreach (var item in names)
             {
-                if((string)item == type)
+                if ((string)item == type)
                 {
                     return true;
                 }

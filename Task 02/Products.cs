@@ -229,8 +229,8 @@ namespace ClassLibrary
         /// <param name="product_one">Первый продукт</param>
         /// <param name="product_two">Второй продукт</param>
         /// <returns></returns>
-        public static Products operator + (Products product_one, Products product_two)
-        {            
+        public static Products operator +(Products product_one, Products product_two)
+        {
             //Вид товара и наименования совпадает?
             if (Products.Equals(product_one, product_two))
             {
@@ -300,12 +300,12 @@ namespace ClassLibrary
             }
         }
         /// <summary>
-        /// Реализация оператора вычитания целого числа из класса
+        /// Реализация оператора вычитания целого числа 
         /// </summary>
         /// <param name="product">Продукция</param>
         /// <param name="subtract_value">Вычитаемое значение</param>
         /// <returns></returns>
-        public static Products operator - (Products product, int subtract_value)
+        public static Products operator -(Products product, int subtract_value)
         {
             int numberOfUnits_new = (int)product.NumberOfUnits - subtract_value;
             if (numberOfUnits_new > 0)

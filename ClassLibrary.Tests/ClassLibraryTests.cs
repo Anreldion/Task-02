@@ -157,7 +157,7 @@ namespace ClassLibrary.Tests
 
             product_one.PriceSetType(Products.Types.Rubles);
             double rubles = product_one.UnitCost;
-            
+
 
             // assert 
             Assert.AreEqual(expecterd_Rubles, rubles, delta);

@@ -115,7 +115,7 @@ namespace ClassLibrary
             {
                 throw new JSONExceptions("Невозможно преобразовать строку. Файл поврежден!");
             }
-            
+
         }
 
         /// <summary>
