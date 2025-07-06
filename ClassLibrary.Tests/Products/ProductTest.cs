@@ -46,7 +46,7 @@ public class ProductTest
     [TestMethod]
     public void Constructor_NullName_ShouldThrow()
     {
-        Assert.ThrowsException<ArgumentException>(() =>
+        Assert.ThrowsException<ArgumentNullException>(() =>
             new TestProduct(null, 10m, 2m, 2));
     }
 
