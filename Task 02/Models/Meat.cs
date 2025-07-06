@@ -2,6 +2,9 @@
 
 namespace ProductManager.Core.Models
 {
+    /// <summary>
+    /// Represents a meat product.
+    /// </summary>
     public class Meat : Product
     {
         public Meat() { }
