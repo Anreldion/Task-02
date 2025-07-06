@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using ClassLibrary.Products;
 using ClassLibrary.Utilities;
 
 namespace ClassLibrary.Services
@@ -37,9 +38,9 @@ namespace ClassLibrary.Services
         /// <returns>
         /// An array of <see cref="Products"/> objects, or an empty array if the input is empty.
         /// </returns>
-        public IEnumerable<Products> Deserialize(string input)=> string.IsNullOrWhiteSpace(input)
-                ? new List<Products>()
-                : JsonSerializer.Deserialize<List<Products>>(input, Options);
+        public IEnumerable<Product> Deserialize(string input)=> string.IsNullOrWhiteSpace(input)
+                ? []
+                : JsonSerializer.Deserialize<List<Product>>(input, Options);
 
         /// <summary>
         /// Serializes an array of <see cref="Products"/> objects into a formatted JSON string.
@@ -47,7 +48,7 @@ namespace ClassLibrary.Services
         /// <param name="input">The array of baked products to serialize.</param>
         /// <returns>A JSON-formatted string representing the baked products.</returns>
         /// <exception cref="System.ArgumentNullException">Thrown when the input is null.</exception>
-        public string Serialize(IEnumerable<Products> input)
+        public string Serialize(IEnumerable<Product> input)
         {
             Guard.NotNull(input, nameof(input));
 
