@@ -2,86 +2,72 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ProductManager.Core.Utilities;
 
-namespace ClassLibrary.Tests.Utilities;
-
-[TestClass]
-public class GuardTest
+namespace ProductManager.Tests.Utilities
 {
-
-    [TestMethod]
-    public void NotNull_ThrowsException()
+    [TestClass]
+    public class GuardTest
     {
-        string value = null;
-        Assert.Throws<ArgumentNullException>(() =>
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void NotNull_ThrowsException_WhenValueIsNull()
         {
+            string value = null;
             Guard.NotNull(value, nameof(value));
-        });
-    }
+        }
 
-    [TestMethod]
-    public void NotNull_DoesNotThrowException()
-    {
-        const string value = "notNull";
-        Assert.DoesNotThrow(() =>
+        [TestMethod]
+        public void NotNull_DoesNotThrow_WhenValueIsNotNull()
         {
+            // Arrange
+            const string value = "notNull";
+
+            // Act & Assert
             Guard.NotNull(value, nameof(value));
-        });
-    }
-    [TestMethod]
-    public void NotEmpty_ThrowsException()
-    {
-        var value = string.Empty;
-        Assert.Throws<InvalidOperationException>(() =>
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void NotEmpty_ThrowsException_WhenValueIsEmpty()
         {
+            var value = string.Empty;
             Guard.NotEmpty(value, nameof(value));
-        });
-    }
+        }
 
-    [TestMethod]
-    public void NotEmpty_DoesNotThrowException()
-    {
-        const string value = "notNull";
-        Assert.DoesNotThrow(() =>
+        [TestMethod]
+        public void NotEmpty_DoesNotThrow_WhenValueIsValid()
         {
+            const string value = "notEmpty";
             Guard.NotEmpty(value, nameof(value));
-        });
-    }
-    [TestMethod]
-    public void AgainstNegative_ThrowsException()
-    {
-        const int value = -1;
-        Assert.Throws<ArgumentOutOfRangeException>(() =>
-        {
-            Guard.AgainstNegative(value, nameof(value));
-        });
-    }
+        }
 
-    [TestMethod]
-    public void AgainstNegative_DoesNotThrowException()
-    {
-        const int value = 1;
-        Assert.DoesNotThrow(() =>
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void AgainstNegative_ThrowsException_WhenValueIsNegative()
         {
+            const int value = -1;
             Guard.AgainstNegative(value, nameof(value));
-        });
-    }
-    [TestMethod]
-    public void AgainstZero_ThrowsException()
-    {
-        const int value = 0;
-        Assert.Throws<ArgumentOutOfRangeException>(() =>
-        {
-            Guard.AgainstZero(value, nameof(value));
-        });
-    }
+        }
 
-    [TestMethod]
-    public void AgainstZero_DoesNotThrowException()
-    {
-        const int value = 1;
-        Assert.DoesNotThrow(() =>
+        [TestMethod]
+        public void AgainstNegative_DoesNotThrow_WhenValueIsPositive()
         {
+            const int value = 1;
+            Guard.AgainstNegative(value, nameof(value));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void AgainstZero_ThrowsException_WhenValueIsZero()
+        {
+            const int value = 0;
             Guard.AgainstZero(value, nameof(value));
-        });
+        }
+
+        [TestMethod]
+        public void AgainstZero_DoesNotThrow_WhenValueIsPositive()
+        {
+            const int value = 1;
+            Guard.AgainstZero(value, nameof(value));
+        }
     }
 }
