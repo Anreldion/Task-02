@@ -7,6 +7,8 @@ namespace ProductManager.Tests.Shared
     /// </summary>
     public class TestProduct : Product
     {
+        public TestProduct(){}
+
         public TestProduct(string name, decimal price, decimal markup, int quantity)
             : base(name, price, markup, quantity) { }
 
