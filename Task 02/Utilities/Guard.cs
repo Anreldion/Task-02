@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ClassLibrary.Utilities
+namespace ProductManager.Core.Utilities
 {
     /// <summary>
     /// Provides guard clause methods for validating method arguments.

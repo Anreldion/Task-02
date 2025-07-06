@@ -1,12 +1,7 @@
 ﻿using System;
 
-namespace ClassLibrary
+namespace ProductManager.Core
 {
-    //****************************************************************
-    // 12. В случае невозможности выполнения какой-либо операции
-    // сгенерировать соответствующее исключение (желательно, собственное)
-    //****************************************************************
-
     public class ProductArgumentException : ArgumentException
     {
         public int Value { get; }
@@ -15,15 +10,9 @@ namespace ClassLibrary
             Value = val;
         }
     }
-    public class ProductExceptions : Exception
+    public class ProductException : Exception
     {
-        public ProductExceptions(string message) : base(message)
-        {
-        }
-    }
-    public class JSONExceptions : Exception
-    {
-        public JSONExceptions(string message) : base(message)
+        public ProductException(string message) : base(message)
         {
         }
     }

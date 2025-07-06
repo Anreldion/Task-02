@@ -1,6 +1,6 @@
 ﻿using System;
-using ClassLibrary.Utilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ProductManager.Core.Utilities;
 
 namespace ClassLibrary.Tests.Utilities;
 
