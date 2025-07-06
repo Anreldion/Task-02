@@ -1,11 +1,11 @@
-﻿using ClassLibrary.Services.Interfaces;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using ClassLibrary.Products;
-using ClassLibrary.Utilities;
+using ProductManager.Core.Products;
+using ProductManager.Core.Services.Interfaces;
+using ProductManager.Core.Utilities;
 
-namespace ClassLibrary.Services
+namespace ProductManager.Core.Services
 {
     /// <summary>
     /// Provides functionality to serialize and deserialize arrays of <see cref="Products"/> objects to and from JSON format.

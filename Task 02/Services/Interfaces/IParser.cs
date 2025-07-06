@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using ClassLibrary.Products;
+using ProductManager.Core.Products;
 
-namespace ClassLibrary.Services.Interfaces
+namespace ProductManager.Core.Services.Interfaces
 {
     public interface IParser
     {

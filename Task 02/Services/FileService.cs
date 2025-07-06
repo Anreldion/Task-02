@@ -1,8 +1,8 @@
-﻿using ClassLibrary.Services.Interfaces;
-using ClassLibrary.Utilities;
-using System.IO;
+﻿using System.IO;
+using ProductManager.Core.Services.Interfaces;
+using ProductManager.Core.Utilities;
 
-namespace ClassLibrary.Services
+namespace ProductManager.Core.Services
 {
     /// <summary>
     /// Provides basic file operations such as saving, reading, and deleting files.

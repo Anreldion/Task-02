@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace ClassLibrary.Services.Interfaces
+namespace ProductManager.Core.Services.Interfaces
 {
     /// <summary>
     /// Provides operations for working with directories.

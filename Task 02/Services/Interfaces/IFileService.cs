@@ -1,4 +1,4 @@
-﻿namespace ClassLibrary.Services.Interfaces
+﻿namespace ProductManager.Core.Services.Interfaces
 {
     public interface IFileService
     {
