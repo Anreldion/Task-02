@@ -1,8 +1,8 @@
-﻿namespace ClassLibrary.Products
+﻿namespace ProductManager.Core.Products
 {
     internal interface IProduct
     {
-        decimal GetPrice();
-        decimal GetPriceForUnit();
+        decimal GetTotalCost();
+        decimal GetUnitCost();
     }
 }

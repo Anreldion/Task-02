@@ -1,9 +1,9 @@
-﻿using System;
-using ClassLibrary.Utilities;
+﻿using ProductManager.Core.Utilities;
+using System;
 
-namespace ClassLibrary.Products
+namespace ProductManager.Core.Products
 {
-    public class Product : IProduct 
+    public abstract class Product : IProduct
     {
         public string Name { get; set; }
 
@@ -11,53 +11,53 @@ namespace ClassLibrary.Products
 
         public decimal Markup { get; set; }
 
-        public double Count { get; set; }
+        public int Quantity { get; set; }
 
         private const double Tolerance = 0.01;
 
         public Product() { }
 
-        public Product(string name, decimal purchasePrice, decimal markup, double count)
+        public Product(string name, decimal purchasePrice, decimal markup, int quantity)
         {
             Guard.NotNull(name, nameof(name));
-            Guard.AgainstNegative(count, nameof(count));
+            Guard.AgainstNegative(quantity, nameof(quantity));
             Guard.AgainstNegative(purchasePrice, nameof(purchasePrice));
             Guard.AgainstNegative(markup, nameof(markup));
 
             Name = name;
             PurchasePrice = purchasePrice;
             Markup = markup;
-            Count = count;
+            Quantity = quantity;
         }
 
-        public decimal GetPriceForUnit()
+        public decimal GetUnitCost()
         {
             return PurchasePrice * Markup;
         }
 
-        public decimal GetPrice()
+        public decimal GetTotalCost()
         {
-            return GetPriceForUnit() * (decimal)Count;
+            return GetUnitCost() * (decimal)Quantity;
         }
 
         public override bool Equals(object obj)
         {
             return obj is Product products &&
                    Name == products.Name &&
-                   Math.Abs(Count - products.Count) < Tolerance &&
+                   Math.Abs(Quantity - products.Quantity) < Tolerance &&
                    Markup == products.Markup &&
                    PurchasePrice == products.PurchasePrice;
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Name, Count, Markup, PurchasePrice);
+            return HashCode.Combine(Name, Quantity, Markup, PurchasePrice);
         }
 
         public override string ToString()
         {
             return
-                $"Type: {nameof(Product)}, Name: {Name}, Purchase Price: {PurchasePrice}$, Markup: {Markup}, Price for 1 unit: {GetPriceForUnit():f2}, Price: {GetPrice():f2};";
+                $"Type: {nameof(Product)}, Name: {Name}, Purchase Price: {PurchasePrice}$, Markup: {Markup}, Price for 1 unit: {GetUnitCost():f2}, Price: {GetTotalCost():f2};";
         }
 
         /// <summary>
@@ -77,21 +77,11 @@ namespace ClassLibrary.Products
                 throw new ProductExceptions("Products unequal");
 
 
-            var count = productOne.Count + productTwo.Count;
-            var price = (productOne.PurchasePrice * (decimal) productOne.Count + productTwo.PurchasePrice * (decimal) productTwo.Count) / (decimal) count;
-            var markup = (productOne.Markup * (decimal) productOne.Count + productTwo.Markup * (decimal) productTwo.Count) / (decimal) count;
+            var newQuantity = productOne.Quantity + productTwo.Quantity;
+            var newPrice = (productOne.PurchasePrice * productOne.Quantity + productTwo.PurchasePrice * productTwo.Quantity) / newQuantity;
+            var newMarkup = (productOne.Markup * productOne.Quantity + productTwo.Markup * productTwo.Quantity) / newQuantity;
 
-            var product = new Product
-            {
-                Markup = markup,
-                Count = productOne.Count + productTwo.Count,
-                
-                PurchasePrice = price,
-                Name = productOne.Name
-            };
-
-            return product;
-
+            return productOne.WithNewValues(newPrice, newMarkup, newQuantity);
         }
 
         /// <summary>
@@ -103,13 +93,12 @@ namespace ClassLibrary.Products
         /// <returns></returns>
         public static Product operator -(Product product, int subtractValue)
         {
-            var numberOfUnitsNew = (int)product.Count - subtractValue;
-            if (numberOfUnitsNew <= 0)
-                throw new ProductArgumentException("Отрицательное количество продукции.", numberOfUnitsNew);
-
-            var newProduct = new Product(product.Name, product.PurchasePrice, product.Markup, numberOfUnitsNew);
-            return newProduct;
+            return product.WithQuantity(product.Quantity - subtractValue);
         }
+
+        protected abstract Product WithNewValues(decimal newPrice, decimal newMarkup, int newQuantity);
+        protected abstract Product WithQuantity(int newQuantity);
+
 
         /// <summary>
         /// Приведения типа товара к целочисленному
@@ -117,7 +106,7 @@ namespace ClassLibrary.Products
         /// <param name="product"></param>
         public static implicit operator int(Product product)
         {
-            return (int)(product.GetPrice() * 100);
+            return (int)(product.GetTotalCost() * 100);
         }
         /// <summary>
         /// Приведения типа товара к вещественному
@@ -125,7 +114,7 @@ namespace ClassLibrary.Products
         /// <param name="product"></param>
         public static implicit operator decimal(Product product)
         {
-            return product.GetPrice();
+            return product.GetTotalCost();
         }
     }
 }
