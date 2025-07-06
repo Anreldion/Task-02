@@ -1,5 +1,6 @@
 ﻿using ProductManager.Core.Utilities;
 using System;
+using ProductManager.Core.Exceptions;
 
 namespace ProductManager.Core.Products
 {
