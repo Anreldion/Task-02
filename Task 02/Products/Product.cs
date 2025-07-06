@@ -3,6 +3,9 @@ using System;
 
 namespace ProductManager.Core.Products
 {
+    /// <summary>
+    /// Abstract base class representing a generic product with core properties and behaviors.
+    /// </summary>
     public abstract class Product : IProduct
     {
         public string Name { get; set; }
@@ -13,11 +16,16 @@ namespace ProductManager.Core.Products
 
         public int Quantity { get; set; }
 
-        private const double Tolerance = 0.01;
-
         public Product() { }
 
-        public Product(string name, decimal purchasePrice, decimal markup, int quantity)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Product"/> class.
+        /// </summary>
+        /// <param name="name">Product name.</param>
+        /// <param name="purchasePrice">Purchase price.</param>
+        /// <param name="markup">Markup added to the purchase price.</param>
+        /// <param name="quantity">Quantity in stock.</param>
+        protected Product(string name, decimal purchasePrice, decimal markup, int quantity)
         {
             Guard.NotNull(name, nameof(name));
             Guard.AgainstNegative(quantity, nameof(quantity));
@@ -30,88 +38,92 @@ namespace ProductManager.Core.Products
             Quantity = quantity;
         }
 
-        public decimal GetUnitCost()
-        {
-            return PurchasePrice * Markup;
-        }
+        /// <summary>
+        /// Gets the unit cost (purchase price + markup).
+        /// </summary>
+        public decimal GetUnitCost() => PurchasePrice + Markup;
 
-        public decimal GetTotalCost()
-        {
-            return GetUnitCost() * (decimal)Quantity;
-        }
+        /// <summary>
+        /// Gets the total cost for all units.
+        /// </summary>
+        public decimal GetTotalCost() => GetUnitCost() * Quantity;
 
         public override bool Equals(object obj)
         {
-            return obj is Product products &&
-                   Name == products.Name &&
-                   Math.Abs(Quantity - products.Quantity) < Tolerance &&
-                   Markup == products.Markup &&
-                   PurchasePrice == products.PurchasePrice;
+            if (obj is not Product other) return false;
+
+            return Name == other.Name &&
+                   Markup == other.Markup &&
+                   PurchasePrice == other.PurchasePrice &&
+                   Quantity == other.Quantity &&
+                   GetType() == other.GetType();
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Name, Quantity, Markup, PurchasePrice);
+            return HashCode.Combine(Name, Quantity, Markup, PurchasePrice, GetType());
         }
 
         public override string ToString()
         {
             return
-                $"Type: {nameof(Product)}, Name: {Name}, Purchase Price: {PurchasePrice}$, Markup: {Markup}, Price for 1 unit: {GetUnitCost():f2}, Price: {GetTotalCost():f2};";
+                $"Type: {GetType().Name}, Name: {Name}, Purchase Price: {PurchasePrice}$, Markup: {Markup}, " +
+                $"Price per unit: {GetUnitCost():F2}$, Total Price: {GetTotalCost():F2}$;";
         }
 
         /// <summary>
-        /// Предусмотреть операцию сложения двух одинаковых видов товаров
-        /// одного наименования – в этом случае цена и наценка вычисляются как
-        /// средневзвешенные в зависимости от количества единиц товара, количество просто суммируется
+        /// Adds two products of the same type and name, combining quantities and averaging prices and markups.
         /// </summary>
-        /// <param name="productOne">Первый продукт</param>
-        /// <param name="productTwo">Второй продукт</param>
-        /// <returns></returns>
-        public static Product operator +(Product productOne, Product productTwo)
+        public static Product operator +(Product a, Product b)
         {
-            Guard.NotNull(productOne, nameof(productOne));
-            Guard.NotNull(productTwo, nameof(productTwo));
+            Guard.NotNull(a, nameof(a));
+            Guard.NotNull(b, nameof(b));
 
-            if (!Equals(productOne, productTwo))
-                throw new ProductExceptions("Products unequal");
+            if (a.Name != b.Name || a.GetType() != b.GetType())
+                throw new ProductException("Products must have the same name and type to be added.");
 
+            int newQuantity = a.Quantity + b.Quantity;
+            decimal newPrice = (a.PurchasePrice * a.Quantity + b.PurchasePrice * b.Quantity) / newQuantity;
+            decimal newMarkup = (a.Markup * a.Quantity + b.Markup * b.Quantity) / newQuantity;
 
-            var newQuantity = productOne.Quantity + productTwo.Quantity;
-            var newPrice = (productOne.PurchasePrice * productOne.Quantity + productTwo.PurchasePrice * productTwo.Quantity) / newQuantity;
-            var newMarkup = (productOne.Markup * productOne.Quantity + productTwo.Markup * productTwo.Quantity) / newQuantity;
-
-            return productOne.WithNewValues(newPrice, newMarkup, newQuantity);
+            return a.WithNewValues(newPrice, newMarkup, newQuantity);
         }
 
         /// <summary>
-        /// Предусмотреть операцию вычитания целого числа, в результате которой
-        /// будет создан новый объект данного типа с изменённым количеством единиц
+        /// Subtracts quantity from a product, returning a new instance with reduced quantity.
         /// </summary>
-        /// <param name="product">Продукция</param>
-        /// <param name="subtractValue">Вычитаемое значение</param>
-        /// <returns></returns>
         public static Product operator -(Product product, int subtractValue)
         {
+            Guard.NotNull(product, nameof(product));
+            if (subtractValue < 0)
+                throw new ArgumentOutOfRangeException(nameof(subtractValue), "Cannot subtract negative quantity.");
+            if (subtractValue > product.Quantity)
+                throw new ProductException("Cannot subtract more units than available.");
+
             return product.WithQuantity(product.Quantity - subtractValue);
         }
 
+        /// <summary>
+        /// Returns a new instance of the product with updated values.
+        /// </summary>
         protected abstract Product WithNewValues(decimal newPrice, decimal newMarkup, int newQuantity);
-        protected abstract Product WithQuantity(int newQuantity);
-
 
         /// <summary>
-        /// Приведения типа товара к целочисленному
+        /// Returns a new instance of the product with updated quantity.
         /// </summary>
-        /// <param name="product"></param>
+        protected abstract Product WithQuantity(int newQuantity);
+
+        /// <summary>
+        /// Converts the product to an integer (total price in cents).
+        /// </summary>
         public static implicit operator int(Product product)
         {
             return (int)(product.GetTotalCost() * 100);
         }
+
         /// <summary>
-        /// Приведения типа товара к вещественному
+        /// Converts the product to a decimal (total price).
         /// </summary>
-        /// <param name="product"></param>
         public static implicit operator decimal(Product product)
         {
             return product.GetTotalCost();
