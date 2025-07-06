@@ -2,18 +2,29 @@
 
 namespace ProductManager.Core
 {
-    public class ProductArgumentException : ArgumentException
-    {
-        public int Value { get; }
-        public ProductArgumentException(string message, int val) : base(message)
-        {
-            Value = val;
-        }
-    }
+    /// <summary>
+    /// Represents an error related to product operations.
+    /// </summary>
     public class ProductException : Exception
     {
-        public ProductException(string message) : base(message)
-        {
-        }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ProductException"/> class.
+        /// </summary>
+        public ProductException() { }
+
+        /// <summary>
+        /// Initializes a new instance with a specified error message.
+        /// </summary>
+        /// <param name="message">The message that describes the error.</param>
+        public ProductException(string message)
+            : base(message) { }
+
+        /// <summary>
+        /// Initializes a new instance with a specified error message and a reference to the inner exception.
+        /// </summary>
+        /// <param name="message">The error message.</param>
+        /// <param name="innerException">The inner exception.</param>
+        public ProductException(string message, Exception innerException)
+            : base(message, innerException) { }
     }
 }
